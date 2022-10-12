@@ -17,6 +17,9 @@ tar -zxf "$opensslOld" --strip-components=1
 make -j4
 make install
 
+[[ ! $(echo $PATH | grep 1.1.1) ]] && export PATH=/opt/openssl-1.1.1/bin:${PATH}
+[[ ! $(echo $LD_LIBRARY_PATH | grep 1.1.1) ]] && export LD_LIBRARY_PATH=/opt/openssl-1.1.1/lib:${LD_LIBRARY_PATH}
+
 # Download PHP
 php_major_version=7.4
 php_version=$(curl -s https://www.php.net/downloads.php | tac | tac | grep "<h3 id=\"v$php_major_version.*" | grep -o -P '(?<="v).*(?=" class)')
@@ -48,6 +51,7 @@ rm configure
     --with-config-file-path=/etc/php"$php_version_short" \
     --with-config-file-scan-dir=/etc/php"$php_version_short"/php.d \
     --with-libdir=lib64 \
+    --with-openssl-dir=/opt/openssl-1.1.1 \
     --enable-fpm \
     --disable-cgi \
     --disable-phpdbg \
@@ -58,7 +62,7 @@ rm configure
     --with-curl \
     --enable-exif \
     --enable-mbstring \
-    --with-openssl=/opt/openssl-1.1.1/ \
+    --with-openssl=/opt/openssl-1.1.1 \
     --with-zip \
     --enable-bcmath \
     --with-jpeg \
