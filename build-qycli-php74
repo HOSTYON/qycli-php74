@@ -51,6 +51,7 @@ rm configure
     --with-config-file-path=/etc/php"$php_version_short" \
     --with-config-file-scan-dir=/etc/php"$php_version_short"/php.d \
     --with-libdir=lib64 \
+    --with-openssl=/opt/openssl-1.1.1 \
     --with-openssl-dir=/opt/openssl-1.1.1 \
     --enable-fpm \
     --disable-cgi \
@@ -62,7 +63,6 @@ rm configure
     --with-curl \
     --enable-exif \
     --enable-mbstring \
-    --with-openssl=/opt/openssl-1.1.1 \
     --with-zip \
     --enable-bcmath \
     --with-jpeg \
