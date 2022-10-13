@@ -2,7 +2,7 @@
 
 # Install dependencies
 apt update && apt upgrade -y
-apt -y install build-essential software-properties-common curl wget tar php-pear libxml2-dev pkg-config libcurl4 libssl-dev libpng-dev libjpeg-dev libwebp-dev libmagickwand-dev libzip-dev libargon2-dev libonig-dev libsodium-dev
+apt -y install build-essential software-properties-common curl wget tar php-pear libxml2-dev pkg-config libcurl4-openssl-dev libssl-dev libpng-dev libjpeg-dev libwebp-dev libmagickwand-dev libzip-dev libargon2-dev libonig-dev libsodium-dev
 
 # Compile old openssl
 #[[ -d /usr/src/qycli/openssl-1.1.1 ]] && rm -rf /usr/src/qycli/openssl-1.1.1
