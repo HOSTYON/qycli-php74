@@ -2,23 +2,23 @@
 
 # Install dependencies
 apt update && apt upgrade -y
-apt -y install build-essential software-properties-common curl wget tar php-pear libxml2-dev pkg-config libssl-dev libcurl4-openssl-dev libpng-dev libjpeg-dev libwebp-dev libmagickwand-dev libzip-dev libargon2-dev libonig-dev libsodium-dev
+apt -y install build-essential software-properties-common curl wget tar php-pear libxml2-dev pkg-config libcurl4 libssl-dev libpng-dev libjpeg-dev libwebp-dev libmagickwand-dev libzip-dev libargon2-dev libonig-dev libsodium-dev
 
 # Compile old openssl
-[[ -d /usr/src/qycli/openssl-1.1.1 ]] && rm -rf /usr/src/qycli/openssl-1.1.1
+#[[ -d /usr/src/qycli/openssl-1.1.1 ]] && rm -rf /usr/src/qycli/openssl-1.1.1
 
-mkdir /usr/src/qycli/openssl-1.1.1
-cd /usr/src/qycli/openssl-1.1.1 || exit
-opensslOld=$(curl -s https://www.openssl.org/source/ | tac | tac | grep -o "href=\"openssl-1.1.1.*.tar.gz\"" | grep -o "openssl-.*.gz")
-wget -qO "$opensslOld" https://www.openssl.org/source/"$opensslOld"
-tar -zxf "$opensslOld" --strip-components=1
+#mkdir /usr/src/qycli/openssl-1.1.1
+#cd /usr/src/qycli/openssl-1.1.1 || exit
+#opensslOld=$(curl -s https://www.openssl.org/source/ | tac | tac | grep -o "href=\"openssl-1.1.1.*.tar.gz\"" | grep -o "openssl-.*.gz")
+#wget -qO "$opensslOld" https://www.openssl.org/source/"$opensslOld"
+#tar -zxf "$opensslOld" --strip-components=1
 
-./config --prefix=/opt/openssl-1.1.1 --openssldir=/usr/src/qycli/openssl-1.1.1
-make -j4
-make install
+#./config --prefix=/opt/openssl-1.1.1 --openssldir=/usr/src/qycli/openssl-1.1.1
+#make -j4
+#make install
 
-[[ ! $(echo $PATH | grep 1.1.1) ]] && export PATH=/opt/openssl-1.1.1/bin:${PATH}
-[[ ! $(echo $LD_LIBRARY_PATH | grep 1.1.1) ]] && export LD_LIBRARY_PATH=/opt/openssl-1.1.1/lib:${LD_LIBRARY_PATH}
+#[[ ! $(echo $PATH | grep 1.1.1) ]] && export PATH=/opt/openssl-1.1.1/bin:${PATH}
+#[[ ! $(echo $LD_LIBRARY_PATH | grep 1.1.1) ]] && export LD_LIBRARY_PATH=/opt/openssl-1.1.1/lib:${LD_LIBRARY_PATH}
 
 # Download PHP
 php_major_version=7.4
