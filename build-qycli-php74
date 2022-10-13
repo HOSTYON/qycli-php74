@@ -80,7 +80,7 @@ make -j4
 make install
 
 mkdir -p /var/git/qycli-php"$php_version_short"/payload/usr/local
-cp -r /usr/local/php"$php_version_short" /var/git/qycli-php"$php_version_short"/payload/usr/local/
+rsync -a --mkpath /usr/local/php"$php_version_short"/ /nginx-result/usr/local/php"$php_version_short"
 
 ##### #####
 # Put dynamic libraries into git repo
