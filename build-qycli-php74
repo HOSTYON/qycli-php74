@@ -52,7 +52,6 @@ rm configure
     --with-config-file-scan-dir=/etc/php"$php_version_short"/php.d \
     --with-libdir=lib64 \
     --with-openssl=/opt/openssl-1.1.1 \
-    --with-openssl-dir=/opt/openssl-1.1.1 \
     --enable-fpm \
     --disable-cgi \
     --disable-phpdbg \
