@@ -46,9 +46,9 @@ tar -xf php-"$php_version".tar.xz --strip-components=1
 # Downloading external extensions
 declare -a extensions=("imagick" "redis")
 for ext in "${extensions[@]}"; do
-    wget -qO $ext.tgz https://pecl.php.net/get/$ext
-    mkdir -p ext/$ext
-    tar -zxf $ext.tgz --strip-components=1 -C ext/$ext/
+    wget -qO "$ext".tgz https://pecl.php.net/get/"$ext"
+    mkdir -p ext/"$ext"
+    tar -zxf "$ext".tgz --strip-components=1 -C ext/"$ext"/
 done
 
 # Deleting configure script for extensions to be compiled also
@@ -92,15 +92,19 @@ rsync -a --mkpath /usr/local/php"$php_version_short"/ /php"$php_version_short"-r
 
 ##### #####
 # Put dynamic libraries into git repo
-for lib in $(ldd /usr/local/php"$php_version_short"/sbin/php-fpm | grep -o "/lib/.* "); do
-    rsync -a --mkpath "$lib" /php"$php_version_short"-result"$lib"
+for lib in $(ldd /usr/local/php"$php_version_short"/sbin/php-fpm | grep -o "/.* "); do
+    libdir=$(echo /php"$php_version_short"-result"$lib" | grep -o "/.*/")
+    [[ ! -d $libdir ]] && mkdir -p "$libdir"
+    rsync -a "$lib" /php"$php_version_short"-result"$lib"
 done
 
 cd /usr/local/php"$php_version_short"/lib/php/extensions/ || exit
 cd "$(ls)" || exit
 
 for ext in *; do
-    for lib in $(ldd "$ext" | grep -o "/lib/.* "); do
-        rsync -a --mkpath "$lib" /php"$php_version_short"-result"$lib"
+    for lib in $(ldd "$ext" | grep -o "/.* "); do
+        libdir=$(echo /php"$php_version_short"-result"$lib" | grep -o "/.*/")
+        [[ ! -d $libdir ]] && mkdir -p "$libdir"
+        rsync -a "$lib" /php"$php_version_short"-result"$lib"
     done
 done
