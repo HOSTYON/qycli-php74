@@ -2,6 +2,7 @@
 
 # This is built on ubuntu 21.10 so there are some preparing steps:
 sed -i -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releases.ubuntu.com/g' /etc/apt/sources.list
+apt update
 if [[ -f /etc/needrestart/needrestart.conf ]]; then
     export NEEDRESTART_MODE=a
     sed "s+#\$nrconf{restart} = '.*';+\$nrconf{restart} = 'a';+" -i /etc/needrestart/needrestart.conf
