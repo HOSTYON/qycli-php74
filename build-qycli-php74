@@ -6,6 +6,7 @@ if [[ -f /etc/needrestart/needrestart.conf ]]; then
     export NEEDRESTART_MODE=a
     sed "s+#\$nrconf{restart} = '.*';+\$nrconf{restart} = 'a';+" -i /etc/needrestart/needrestart.conf
 fi
+apt purge snapd -y && apt autoremove -y
 apt update && apt dist-upgrade -y
 
 # Install dependencies
