@@ -11,6 +11,8 @@ fi
 #apt update && apt dist-upgrade -y
 systemctl stop snapd
 systemctl disable snapd
+systemctl stop snapd.seeded
+systemctl disable snapd.seeded
 
 sed -re 's/([a-z]{2}\.)?archive.ubuntu.com|security.ubuntu.com/old-releases.ubuntu.com/g' -i /etc/apt/sources.list
 # Install dependencies
