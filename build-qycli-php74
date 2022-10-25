@@ -20,7 +20,8 @@ php_version_short=$(echo "$php_major_version" | tr -d ".")
 compile_prefix=/usr/src/qycli/php-"$php_version_short"
 
 install_prefix=/usr/local/qycli/php"$php_version_short"
-lib_path=/usr/local/qycli/lib/"$ubuntu_comp_ver"/
+lib_path=/lib/lib/
+lib_path_full="$install_prefix""$lib_path"
 result_volume_dir=/php"$php_version_short"-result
 
 #export PHP_RPATHS='/lib/qycli/21.10'
@@ -105,10 +106,10 @@ done
 
 sort -u "$compile_prefix"/alllibs >"$compile_prefix"/libssorted
 
-mkdir -p "$result_volume_dir""$lib_path"
+mkdir -p "$result_volume_dir""$lib_path_full"
 
 while IFS= read -r lib; do
-    libtarget="$result_volume_dir""$lib_path""$(basename "$lib")"
+    libtarget="$result_volume_dir""$lib_path_full""$(basename "$lib")"
     rsync -aL "$lib" "$libtarget"
     # shellcheck disable=SC2016
     patchelf --set-rpath '$ORIGIN' "$libtarget"
@@ -117,10 +118,10 @@ done <"$compile_prefix"/libssorted
 # Fix interpreter
 interpreter_old="$(patchelf --print-interpreter "$install_prefix"/sbin/php-fpm)"
 # shellcheck disable=SC2016
-origin_lib_path='$ORIGIN/../../lib/'"$ubuntu_comp_ver"
-interpreter_new="$origin_lib_path""/""$(basename "$interpreter_old")"
+origin_lib_path='$ORIGIN/../'"$lib_path"
+interpreter_new="$lib_path_full""$(basename "$interpreter_old")"
 
-cp "$interpreter_old" "$result_volume_dir""$lib_path""$(basename "$interpreter_old")"
+cp "$interpreter_old" "$result_volume_dir""$lib_path_full""$(basename "$interpreter_old")"
 
 patchelf --set-interpreter "$interpreter_new" --set-rpath "$origin_lib_path" "$result_volume_dir""$install_prefix"/sbin/php-fpm
 patchelf --set-interpreter "$interpreter_new" --set-rpath "$origin_lib_path" "$result_volume_dir""$install_prefix"/bin/php
