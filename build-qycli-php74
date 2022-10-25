@@ -14,11 +14,13 @@ php_major_version=7.4
 php_version=$(curl -s https://www.php.net/downloads.php | tac | tac | grep "<h3 id=\"v$php_major_version.*" | grep -o -P '(?<="v).*(?=" class)')
 php_version_short=$(echo "$php_major_version" | tr -d ".")
 
-install_prefix=/usr/local/qycli/php"$php_version_short"
 compile_prefix=/usr/src/qycli/php-"$php_version_short"
+
+install_prefix=/usr/local/qycli/php"$php_version_short"
+relative_lib_path=
 result_volume_dir=/php"$php_version_short"-result
 
-export PHP_RPATHS='/lib/qycli/21.10'
+#export PHP_RPATHS='/lib/qycli/21.10'
 
 [[ -d /usr/src/qycli/php-${php_version_short} ]] && rm -rf "$compile_prefix"
 
