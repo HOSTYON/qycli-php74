@@ -115,7 +115,7 @@ done <"$compile_prefix"/libssorted
 # Fix interpreter
 interpreter_old="$(patchelf --print-interpreter "$install_prefix"/sbin/php-fpm)"
 # shellcheck disable=SC2016
-origin_lib_path='$ORIGIN/../'"$lib_path"
+origin_lib_path='$ORIGIN/..'"$lib_path"
 interpreter_new="$lib_path_full""$(basename "$interpreter_old")"
 
 cp "$interpreter_old" "$result_volume_dir""$lib_path_full""$(basename "$interpreter_old")"
