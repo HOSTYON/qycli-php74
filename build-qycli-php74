@@ -9,6 +9,8 @@ dpkg-divert --divert /etc/apt/disabled.apt.conf.d/99needrestart --rename /etc/ap
 apt update && apt upgrade -y
 apt -y install build-essential software-properties-common patchelf rsync curl wget tar php-pear libxml2-dev pkg-config libcurl4-openssl-dev libssl-dev libpng-dev libjpeg-dev libwebp-dev libmagickwand-dev libzip-dev libargon2-dev libonig-dev libsodium-dev
 
+ubuntu_comp_ver="21.10"
+
 # Download PHP
 php_major_version=7.4
 php_version=$(curl -s https://www.php.net/downloads.php | tac | tac | grep "<h3 id=\"v$php_major_version.*" | grep -o -P '(?<="v).*(?=" class)')
@@ -17,7 +19,7 @@ php_version_short=$(echo "$php_major_version" | tr -d ".")
 compile_prefix=/usr/src/qycli/php-"$php_version_short"
 
 install_prefix=/usr/local/qycli/php"$php_version_short"
-relative_lib_path=
+lib_path=/usr/local/qycli/lib/"$ubuntu_comp_ver"/
 result_volume_dir=/php"$php_version_short"-result
 
 #export PHP_RPATHS='/lib/qycli/21.10'
@@ -102,10 +104,22 @@ done
 
 sort -u "$compile_prefix"/alllibs >"$compile_prefix"/libssorted
 
-mkdir -p "$result_volume_dir"/lib/qycli/21.10
+mkdir -p "$result_volume_dir""$lib_path"
+
 while IFS= read -r lib; do
-    libtarget="$result_volume_dir""/lib/qycli/21.10/""$(basename "$lib")"
+    libtarget="$result_volume_dir""$lib_path""$(basename "$lib")"
     rsync -aL "$lib" "$libtarget"
     # shellcheck disable=SC2016
     patchelf --set-rpath '$ORIGIN' "$libtarget"
 done <"$compile_prefix"/libssorted
+
+# Fix interpreter
+interpreter_old="$(patchelf --print-interpreter "$install_prefix"/sbin/php-fpm)"
+# shellcheck disable=SC2016
+origin_lib_path='$ORIGIN/../../lib/'"$ubuntu_comp_ver"
+interpreter_new="$origin_lib_path""/""$(basename "$interpreter_old")"
+
+cp "$interpreter_old" "$result_volume_dir""$lib_path""$(basename "$interpreter_old")"
+
+patchelf --set-interpreter "$interpreter_new" --set-rpath "$origin_lib_path" "$result_volume_dir""$install_prefix"/sbin/php-fpm
+patchelf --set-interpreter "$interpreter_new" --set-rpath "$origin_lib_path" "$result_volume_dir""$install_prefix"/bin/php
